@@ -1,0 +1,11 @@
+handler: products/updateOrderStatus.updateOrderStatus
+environment:
+  ORDERS_TABLE: ${file(./serverless/env.yml):environments.ORDERS_TABLE}
+  ORDERS_STATUS_TABLE: ${file(./serverless/env.yml):environments.ORDERS_STATUS_TABLE}
+  UPDATE_ORDER_QUEUE_URL: ${self:custom.updateOrderQueueUrl}
+events:
+  - sqs:
+      arn:
+        Fn::GetAtt:
+          - UpdateOrderQueue
+          - Arn

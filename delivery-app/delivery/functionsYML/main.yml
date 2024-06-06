@@ -1,0 +1,4 @@
+functions:
+  updateOrderStatus: ${file(./delivery/functionsYML/updateOrderStatus.yml)}
+  processDLQ: ${file(./delivery/functionsYML/processDLQ.yml)}
+  notifyOrderStatusUpdated: ${file(./delivery/functionsYML/notifyOrderStatusUpdated.yml)}

@@ -1,0 +1,11 @@
+handler: products/handleOrderStatusUpdated.handleOrderStatusUpdated
+environment:
+  ORDERS_STATUS_TABLE: ${file(./serverless/env.yml):environments.ORDERS_STATUS_TABLE}
+events:
+  - eventBridge:
+      eventBus: default
+      pattern:
+        source:
+          - "deliveryapp.order"
+        detail-type:
+          - "Order Status Updated"

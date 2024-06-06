@@ -1,0 +1,14 @@
+service: e-commerce
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  region: us-east-1
+  stage: dev
+
+functions: ${file(./functionsYML/main.yml):functions}
+
+
+resources:
+  - ${file(./serverless/resources.yml)}

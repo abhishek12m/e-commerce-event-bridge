@@ -1,0 +1,10 @@
+{
+  "name": "delivery-app",
+  "version": "1.0.0",
+  "description": "",
+  "dependencies": {
+    "aws-sdk": "^2.1630.0",
+    "express": "^4.18.2",
+    "serverless-http": "^3.1.1"
+  }
+}

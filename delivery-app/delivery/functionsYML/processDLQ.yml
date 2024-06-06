@@ -1,0 +1,14 @@
+handler: products/processDLQ.processDLQ
+environment:
+  DLQ_TABLE: ${file(./serverless/env.yml):environments.DLQ_TABLE}
+  S3_BUCKET_NAME: ${file(./serverless/env.yml):environments.S3_BUCKET_NAME}
+  UPDATE_ORDER_QUEUE_URL: ${self:custom.updateOrderQueueUrl}
+  UPDATE_ORDER_DLQ_URL: ${self:custom.updateOrderDLQUrl}
+events:
+  - sqs:
+      arn:
+        Fn::GetAtt:
+          - UpdateOrderDLQ
+          - Arn
+      batchSize: 10
+      maximumBatchingWindow: 60

@@ -1,0 +1,20 @@
+service: delivery-app
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  region: us-east-1
+  stage: dev
+
+
+functions: ${file(./delivery/functionsYML/main.yml):functions}
+
+resources:
+  - ${file(./delivery/resources.yml)}
+
+custom:
+  updateOrderQueueUrl:
+    Ref: UpdateOrderQueue
+  updateOrderDLQUrl:
+    Ref: UpdateOrderDLQ

@@ -1,0 +1,9 @@
+handler: products/notifyOrderStatusUpdated.notifyOrderStatusUpdated
+events:
+  - eventBridge:
+      eventBus: default
+      pattern:
+        source:
+          - "deliveryapp.order"
+        detail-type:
+          - "Order Status Updated"

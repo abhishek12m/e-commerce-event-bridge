@@ -1,0 +1,37 @@
+Resources:
+  UpdateOrderQueue:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: updateOrderQueue_${self:provider.stage}
+      RedrivePolicy:
+        deadLetterTargetArn:
+          Fn::GetAtt: 
+            - UpdateOrderDLQ
+            - Arn
+        maxReceiveCount: 2
+  UpdateOrderDLQ:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: updateOrderDLQ_${self:provider.stage}
+  # OrdersErrorBucket:
+  #   Type: AWS::S3::Bucket
+  #   Properties:
+  #     BucketName: orders-error-${self:provider.stage}
+  EventBridgeRule:
+    Type: AWS::Events::Rule
+    Properties:
+      EventPattern:
+        source:
+          - "deliveryapp.order"
+        detail-type:
+          - "Order Status Updated"
+      Targets:
+        - Arn: arn:aws:lambda:${self:provider.region}:${aws:accountId}:function:${self:service}-${self:provider.stage}-notifyOrderStatusUpdated
+          Id: "notifyOrderStatusUpdatedFunction"
+  NotifyOrderStatusUpdatedPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: ${self:service}-${self:provider.stage}-notifyOrderStatusUpdated
+      Action: lambda:InvokeFunction
+      Principal: events.amazonaws.com
+      SourceArn: arn:aws:events:us-east-1:${aws:accountId}:rule/delivery-app-dev-notifyOrderStatusUpdated-rule-1

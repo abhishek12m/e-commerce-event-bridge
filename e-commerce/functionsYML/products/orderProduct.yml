@@ -1,0 +1,12 @@
+handler: products/orderProduct.orderProduct
+environment:
+  ORDERS_TABLE: ${file(./serverless/env.yml):environments.ORDERS_TABLE}
+  ORDERS_STATUS_TABLE: ${file(./serverless/env.yml):environments.ORDERS_STATUS_TABLE}
+
+events:
+  - http:
+      path: create-order
+      method: post
+      authorizer:
+        name: authorizeToken
+        type: request

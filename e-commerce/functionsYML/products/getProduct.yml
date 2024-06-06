@@ -1,0 +1,10 @@
+handler: products/getProduct.getProduct
+environment:
+  PRODUCTS_TABLE: ${file(./serverless/env.yml):environments.PRODUCTS_TABLE}
+events:
+  - http:
+      path: productById/{id}
+      method: get
+      authorizer:
+        name: authorizeToken
+        type: request

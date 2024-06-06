@@ -1,0 +1,25 @@
+Resources:
+  UsersTable: ${file(./serverless/userTable.yml)}
+  ProductsTable: ${file(./serverless/productsTable.yml)}
+  OrdersTable: ${file(./serverless/ordersTable.yml)}
+  OrdersStatusTable: ${file(./serverless/ordersStatusTable.yml)}
+  DLQTable: ${file(./serverless/dlqTable.yml)}
+  
+  EventBridgeRule:
+    Type: AWS::Events::Rule
+    Properties:
+      EventPattern:
+        source:
+          - "deliveryapp.order"
+        detail-type:
+          - "Order Status Updated"
+      Targets:
+        - Arn: arn:aws:lambda:${self:provider.region}:${aws:accountId}:function:${self:service}-${self:provider.stage}-handleOrderStatusUpdated
+          Id: "handleOrderStatusUpdatedFunction"
+  NotifyOrderStatusUpdatedPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: ${self:service}-${self:provider.stage}-handleOrderStatusUpdated
+      Action: lambda:InvokeFunction
+      Principal: events.amazonaws.com
+      SourceArn: arn:aws:events:${self:provider.region}:${aws:accountId}:rule/${self:service}-${self:provider.stage}-handleOrderStatusUpdated-rule-1
